@@ -5,14 +5,10 @@ const session = require('express-session');
 const cors = require('cors')
 
 //add controllers here
-const {register, login} = require("./controllers/authController")
-const doctorController = require("./controllers/doctorController");
-const categoryController = require("./controllers/categoryController");
-const postController = require("./controllers/postController");
-const replyController = require("./controllers/replyController");
-const likeController = require("./controllers/likeController");
-const slotController = require("./controllers/slotController");
-const appointmentController = require("./controllers/appointmentController");
+const {register, login} = require("./controllers/artistController")
+const albumController = require("./controllers/albumController");
+const genreController = require("./controllers/genreController");
+const songController = require("./controllers/songController");
 
 app.use(cors({origin: process.env.FRONTEND_URL, credentials: true}));
 app.use(express.json());
@@ -26,20 +22,16 @@ app.use(
 )
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/categories", categoryController);
-app.use("/doctors", doctorController);
-app.use("/posts", postController);
-app.use("/replies", replyController);
-app.use("/likes", likeController);
-app.use("/slots", slotController);
-app.use("/appointments", appointmentController);
+app.use("/albums", albumController);
+app.use("/genres", genreController);
+app.use("/songs", songController);
 
-passport.serializeUser(function({user, token}, done) {
-    done(null, {user, token});
+passport.serializeUser(function({artist, token}, done) {
+    done(null, {artist, token});
 });
   
-passport.deserializeUser(function({user, token}, done) {
-    done(null, {user, token});
+passport.deserializeUser(function({artist, token}, done) {
+    done(null, {artist, token});
 });
 
 
@@ -68,7 +60,7 @@ app.post("/register", register);
 app.post("/login", login);
 
 app.get('/profile',isLoggedIn,(req, res) => {
-    res.send(req.user);
+    res.send(req.artist);
 })
 
 app.get("/",(req,res)=>{

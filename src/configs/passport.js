@@ -2,8 +2,8 @@ require("dotenv").config();
 const passport = require('passport');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const {v4: uuidV4} = require('uuid');
-const User = require("../models/userModel");
-const {newToken} = require("../controllers/authController")
+const Artist = require("../models/artistModel");
+const {newToken} = require("../controllers/artistController")
 
 passport.use(new GoogleStrategy({
     clientID:     process.env.GOOGLE_CLIENT_ID,
@@ -17,20 +17,20 @@ passport.use(new GoogleStrategy({
     const name = profile?._json?.name
 
     console.log(email)
-    let user;
+    let artist;
     try { 
-      user = await User.findOne({email}).lean().exec();
+      artist = await Artist.findOne({email}).lean().exec();
 
-      if(!user) {
-        user = await User.create({
+      if(!artist) {
+        artist = await Artist.create({
           name:name,
           email: email,
           password: uuidV4()
         })
       }
 
-      const token = newToken(user);
-      return done(null, {user, token})
+      const token = newToken(artist);
+      return done(null, {artist, token})
 
     } catch(err) {
       console.log("err", err)
