@@ -58,4 +58,15 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = {register, login,newToken}
+
+const getAllArtist = async (req, res)=>{
+    let artists = await Artist.find({}).populate({
+        path: 'albumids',
+        populate: { path: 'songids' }
+      }
+    );
+    return res.status(200).send(artists);
+}
+
+
+module.exports = {register, login,newToken,getAllArtist}

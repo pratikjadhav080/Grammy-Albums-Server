@@ -8,11 +8,21 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-    let albums = await Album.find().populate(['artistid','genreid','songids']).lean();
-    res.status(201).send(albums);
+
+    const page = +req.query.page || 1;
+    const size = +req.query.size || 2;
+    const offset = (page-1)*size;
+
+    let albums = await Album.find().skip(offset).limit(size).populate(['artistid','genreid','songids']).lean();
+
+    const totalUserCount = await Album.find().countDocuments();
+    const totalPages = Math.ceil(totalUserCount/size)
+
+    res.status(201).send({albums:albums, totalPages:totalPages});
 });
 
 router.get("/:id", async (req, res) => {
+
     let album = await Album.findById(req.params.id).populate(['artistid','genreid','songids']).lean();
     res.status(201).send(album);
 });

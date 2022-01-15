@@ -13,8 +13,22 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    let genre = await Genre.findById(req.params.id).lean();
-    res.status(201).send(genre);
+
+    const page = +req.query.page || 1;
+    const size = +req.query.size || 2;
+    const offset = (page-1)*size;
+    
+    let genre = await Genre.findById(req.params.id).populate('albumids').lean();
+
+    let albums = genre.albumids.filter((e,i)=>{
+        return i>offset-1
+    }).filter((e,i)=>{
+        return i<size
+    })
+
+    const totalPages = Math.ceil(genre.albumids.length/size)
+
+    res.status(201).send({albums:albums, totalPages:totalPages});
 });
 
 router.patch("/:id", async (req, res) => {

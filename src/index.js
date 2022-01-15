@@ -5,7 +5,7 @@ const session = require('express-session');
 const cors = require('cors')
 
 //add controllers here
-const {register, login} = require("./controllers/artistController")
+const {register, login,getAllArtist} = require("./controllers/artistController")
 const albumController = require("./controllers/albumController");
 const genreController = require("./controllers/genreController");
 const songController = require("./controllers/songController");
@@ -25,6 +25,7 @@ app.use(passport.session());
 app.use("/albums", albumController);
 app.use("/genres", genreController);
 app.use("/songs", songController);
+app.get("/artists", getAllArtist);
 
 passport.serializeUser(function({artist, token}, done) {
     done(null, {artist, token});
