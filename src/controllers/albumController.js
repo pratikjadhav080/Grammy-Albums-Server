@@ -9,11 +9,17 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
 
+    let albums;
+    const sort = req.query.sort;
     const page = +req.query.page || 1;
     const size = +req.query.size || 2;
     const offset = (page-1)*size;
 
-    let albums = await Album.find().skip(offset).limit(size).populate(['artistid','genreid','songids']).lean();
+    if(sort){
+        albums = await Album.find().sort({dateofrelease: +sort}).skip(offset).limit(size).populate(['artistid','genreid','songids']).lean();
+    }else{
+        albums = await Album.find().skip(offset).limit(size).populate(['artistid','genreid','songids']).lean();
+    }
 
     const totalUserCount = await Album.find().countDocuments();
     const totalPages = Math.ceil(totalUserCount/size)

@@ -14,13 +14,28 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
 
+    let albums;
+    const sort = req.query.sort;
     const page = +req.query.page || 1;
     const size = +req.query.size || 2;
     const offset = (page-1)*size;
     
     let genre = await Genre.findById(req.params.id).populate('albumids').lean();
 
-    let albums = genre.albumids.filter((e,i)=>{
+    if(sort){
+        albums = genre.albumids.sort((a, b) => {
+            let date1 = +a.dateofrelease.slice(0,4);
+            let date2 = +b.dateofrelease.slice(0,4);
+
+            // console.log(date1,date2)
+
+            return sort=="1"? date1-date2:date2-date1;
+        })
+    }
+
+    // console.log(albums)
+
+    albums = genre.albumids.filter((e,i)=>{
         return i>offset-1
     }).filter((e,i)=>{
         return i<size

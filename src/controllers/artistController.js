@@ -36,7 +36,7 @@ const login = async (req, res) => {
     console.log("here")
     try {
         // First we will check if artist with same email already exists
-        let artist = await Artist.findOne({email: req.body.email});
+        let artist = await Artist.findOne({email: req.body.email}).populate('albumids');
 
         // if not exists we throw an error
         if(! artist) return res.status(400).send({message: "Please check your email and password"});
