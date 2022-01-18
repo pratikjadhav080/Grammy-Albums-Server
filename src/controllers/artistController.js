@@ -83,4 +83,17 @@ const getArtistData = async (req, res)=>{
     return res.status(200).send(artist);
 }
 
-module.exports = {register, login,newToken,getAllArtist,updateArtistData,getArtistData}
+const addAlbumtolist = async (req, res)=>{
+    let artist = await Artist.findByIdAndUpdate(req.params.artistid, { $addToSet: { albumids: req.body.id } }).lean().exec();
+
+    return res.status(200).send(artist);
+}
+
+
+module.exports = {register, login,newToken,getAllArtist,updateArtistData,getArtistData,addAlbumtolist}
+
+// .populate({
+//     path: 'albumids',
+//     populate: { path: 'songids' }
+//   }
+// ).

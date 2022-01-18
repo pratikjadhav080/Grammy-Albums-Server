@@ -44,6 +44,13 @@ router.get("/:id", async (req, res) => {
     res.status(201).send({albums:albums, totalPages:totalPages});
 });
 
+router.patch("/addalbum/:id", async (req, res) => {
+
+    let genre = await Genre.findByIdAndUpdate(req.params.id, { $addToSet: { albumids: req.body.id } }).lean().exec();
+
+    res.status(200).send(genre);
+});
+
 router.patch("/:id", async (req, res) => {
     let genre = await Genre.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).send(genre);

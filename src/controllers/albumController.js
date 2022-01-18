@@ -1,9 +1,29 @@
+const { default: axios } = require("axios");
 const express = require("express");
 const Album = require("../models/albumModel");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
     let album = await Album.create(req.body);
+    // console.log(JSON.stringify(album._id))
+
+    axios.patch(`http://localhost:7765/artists/newAlbum/${req.body.artistid}`,{id:album._id})
+    .then(res => {
+        console.log("here")
+    })
+    .catch(err => {
+        console.log("Error", err);
+    })
+
+    axios.patch(`http://localhost:7765/genres/addalbum/${req.body.genreid}`,{id:album._id})
+    .then(res => {
+        console.log("here")
+    })
+    .catch(err => {
+        console.log("Error", err);
+    })
+
+
     res.status(201).send(album);
 });
 
