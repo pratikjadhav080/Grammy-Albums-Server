@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     let album = await Album.create(req.body);
-    // console.log(JSON.stringify(album._id))
 
     axios.patch(`http://localhost:7765/artists/newAlbum/${req.body.artistid}`,{id:album._id})
     .then(res => {
@@ -60,8 +59,8 @@ router.get("/:id", async (req, res) => {
     res.status(201).send(album);
 });
 
-router.patch("/:id", async (req, res) => {
-    let album = await Album.findByIdAndUpdate(req.params.id, req.body, { new: true });
+router.patch("/newSong/:id", async (req, res) => {
+    let album = await Album.findByIdAndUpdate(req.params.id, { $addToSet: { songids: req.body.id } }).lean().exec();
     res.status(200).send(album);
 });
 
