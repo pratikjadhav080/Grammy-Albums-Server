@@ -68,5 +68,19 @@ const getAllArtist = async (req, res)=>{
     return res.status(200).send(artists);
 }
 
+const updateArtistData = async (req, res)=>{
+    console.log(req.body)
+    let artist = await Artist.findByIdAndUpdate(req.params.id, req.body, { new: true }).lean().exec();
+    return res.status(200).send(artist);
+}
 
-module.exports = {register, login,newToken,getAllArtist}
+const getArtistData = async (req, res)=>{
+    let artist = await Artist.findById(req.params.id).populate({
+        path: 'albumids',
+        populate: { path: 'songids' }
+      }
+    ).lean().exec();
+    return res.status(200).send(artist);
+}
+
+module.exports = {register, login,newToken,getAllArtist,updateArtistData,getArtistData}

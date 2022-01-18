@@ -27,6 +27,13 @@ router.get("/", async (req, res) => {
     res.status(201).send({albums:albums, totalPages:totalPages});
 });
 
+router.get("/searchbyname", async (req, res) => {
+
+    let album = await Album.find({albumname: {$regex: req.query.search, $options: 'i'}}).lean().exec();
+    res.status(201).send(album);
+});
+
+
 router.get("/:id", async (req, res) => {
 
     let album = await Album.findById(req.params.id).populate(['artistid','genreid','songids']).lean();
@@ -37,7 +44,6 @@ router.patch("/:id", async (req, res) => {
     let album = await Album.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).send(album);
 });
-
 
 router.delete("/:id", async (req, res) => {
     let album = await Album.deleteOne({ _id: req.params.id });
