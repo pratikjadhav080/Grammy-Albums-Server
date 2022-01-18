@@ -4,9 +4,7 @@ const router = express.Router();
 const Song = require("../models/songModel");
 
 router.post("/", async (req, res) => {
-
-    console.log(req.body)
-
+    
     let song = await Song.create(req.body);
 
     axios.patch(`http://localhost:7765/albums/newSong/${req.body.albumid}`,{id:song._id})

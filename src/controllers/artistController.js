@@ -91,9 +91,3 @@ const addAlbumtolist = async (req, res)=>{
 
 
 module.exports = {register, login,newToken,getAllArtist,updateArtistData,getArtistData,addAlbumtolist}
-
-// .populate({
-//     path: 'albumids',
-//     populate: { path: 'songids' }
-//   }
-// ).
